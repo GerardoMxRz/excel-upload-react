@@ -32,7 +32,7 @@ const App = () => {
           setFile(null);
           setTimeout(() => {
             setLoading(false);
-          }, 1000);
+          }, 500);
         });
     };
 
@@ -43,7 +43,8 @@ const App = () => {
 
   const onFileChange = (e) => {
     const f = e.target.files[0];
-    console.log(f.size);
+    // console.log(f.size);
+    document.querySelector('#fileInput').value = '';
     setFile(f)
   };
 
@@ -65,7 +66,7 @@ const App = () => {
               <form onSubmit={handleSubmit}>
                 <div className="input-group mb-3">
                   <div className="custom-file">
-                    <input type="file" name="file" className="custom-file-input" id="file" onChange={onFileChange} />
+                    <input type="file" name="file" className="custom-file-input" id="fileInput" onChange={onFileChange} />
                     <label className="custom-file-label" htmlFor="file">Choose file</label>
                   </div>
                   <div className="input-group-append">
