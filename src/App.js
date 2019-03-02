@@ -12,6 +12,9 @@ const ContentLoader = () => (
 const App = () => {
 
   const [file, setFile] = useState(null);
+  const [fileObj, setFileObj] = useState(null);
+  const [showTable, setShowTable] = useState(null);
+  const [showJSON, setShowJSON] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
@@ -24,6 +27,7 @@ const App = () => {
       axios.post('http://localhost:4000/upload/excel', { file: bstr })
         .then(function (response) {
           console.log(response);
+          setFileObj(response.data || null);
         })
         .catch(function (error) {
           console.log(error);
@@ -48,10 +52,54 @@ const App = () => {
     setFile(f)
   };
 
+  const ActionsRow = (
+    <div className="row">
+      <div className="col">
+        <button type="button" className="btn btn-sm btn-outline-primary mr-2" onClick={() => {
+          setShowTable(true);
+          setShowJSON(false);
+        }}>
+          Show table
+        </button>
+        <button type="button" className="btn btn-sm btn-outline-success" onClick={() => {
+          setShowJSON(true);
+          setShowTable(false);
+        }}>
+          Show JSON
+        </button>
+      </div>
+    </div>
+  );
+
+  const TableRow = (
+    <table className="table">
+      <thead>
+        <tr>
+          {fileObj && fileObj.originalHeaders.map(header => <th key={header}>{header}</th>)};
+            </tr>
+      </thead>
+      <tbody>
+        {fileObj && fileObj.rows.map((row, i) => {
+          return (
+            <tr key={i}>
+              {fileObj && fileObj.mapHeaders.map(mapH => <td key={row[mapH]}>{row[mapH]}</td>)}
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  );
+
+  const JSONRow = (
+    <pre style={{ height: 'calc(100vh - 35vh)' }}>
+      {JSON.stringify(fileObj || {}, null, 4)}
+    </pre>
+  );
+
   return (
     <div className="container pt-5">
       <header className="App-header">
-        <div className="jumbotron bg-transparent position-relative">
+        <div className="jumbotron pt-0 bg-transparent position-relative">
           {loading && <ContentLoader />}
           <div className="d-flex flex-row align-items-center">
             <img className="rocketlabs-logo mx-5" src="https://blog.rocketlabs.mx/content/images/2019/02/rlabs-1.png" alt="rocketlabs" />
@@ -61,7 +109,10 @@ const App = () => {
             </div>
           </div>
           <hr />
-          <div className="row justify-content-center pt-3">
+          <div className="row justify-content-between pt-3">
+            <div className="col-sm-12 col-md-4">
+              {fileObj && ActionsRow}
+            </div>
             <div className="col-sm-12 col-md-4">
               <form onSubmit={handleSubmit}>
                 <div className="input-group mb-3">
@@ -79,6 +130,14 @@ const App = () => {
               </form>
             </div>
           </div>
+
+          <div className="row">
+            <div className="col table-responsive pt-3" style={{ height: 'calc(100vh - 35vh)' }}>
+              {showTable && TableRow}
+              {showJSON && JSONRow}
+            </div>
+          </div>
+
         </div>
       </header>
     </div>
