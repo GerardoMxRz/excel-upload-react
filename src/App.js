@@ -13,6 +13,7 @@ const App = () => {
 
   const [file, setFile] = useState(null);
   const [fileObj, setFileObj] = useState(null);
+  const [budgetObj, setBudgetObj] = useState(null);
   // const [showTable, setShowTable] = useState(null);
   // const [showJSON, setShowJSON] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -61,6 +62,15 @@ const App = () => {
     setFile(f)
   };
 
+  const getBudget = async () => {
+    const testBudgetUrl = 'http://localhost:5000/bist-2-dev/us-central1/gettingBudgetEstimate';
+    axios.get(testBudgetUrl)
+        .then(result => {
+          setBudgetObj(result.data || {});
+        })
+        .catch(err => console.log(err));
+  };
+
   // const ActionsRow = (
   //   <div className="row">
   //     <div className="col">
@@ -105,6 +115,12 @@ const App = () => {
     </pre>
   );
 
+  const JSONBudget = (
+      <pre style={{ height: 'calc(100vh - 35vh)', backgroundColor: '#595959', padding: '1rem', color: 'white'}}>
+      {JSON.stringify(budgetObj || {}, null, 4)}
+    </pre>
+  );
+
   return (
     <div className="container-fluid pt-5">
       <header className="App-header">
@@ -123,6 +139,11 @@ const App = () => {
             {/*  {fileObj && ActionsRow}*/}
             {/*</div>*/}
             <div className="col-sm-12 col-md-4">
+              <button className="btn btn-primary" onClick={getBudget}>
+                Get Budget
+              </button>
+            </div>
+            <div className="col-sm-12 col-md-4">
               <form onSubmit={handleSubmit}>
                 <div className="input-group mb-3">
                   <div className="custom-file">
@@ -137,6 +158,12 @@ const App = () => {
                   </div>
                 </div>
               </form>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col table-responsive pt-3" style={{ height: 'calc(100vh - 35vh)' }}>
+              {budgetObj && JSONBudget}
             </div>
           </div>
 
