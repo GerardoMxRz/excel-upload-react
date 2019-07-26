@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import NumberFormat from 'react-number-format';
 import axios from 'axios';
 import './App.css'
 
@@ -63,12 +64,14 @@ const App = () => {
   };
 
   const getBudget = async () => {
+    setLoading(true);
     const testBudgetUrl = 'http://localhost:5000/bist-2-dev/us-central1/gettingBudgetEstimate';
     axios.get(testBudgetUrl)
         .then(result => {
           setBudgetObj(result.data || {});
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
   };
 
   // const ActionsRow = (
@@ -110,15 +113,18 @@ const App = () => {
   // );
 
   const JSONRow = (
-    <pre style={{ height: 'calc(100vh - 35vh)', backgroundColor: '#595959', padding: '1rem', color: 'white'}}>
+    <pre style={{ backgroundColor: '#595959', padding: '2rem 1rem', color: 'white'}}>
       {JSON.stringify(fileObj || {}, null, 4)}
     </pre>
   );
 
   const JSONBudget = (
-      <pre style={{ height: 'calc(100vh - 35vh)', backgroundColor: '#595959', padding: '1rem', color: 'white'}}>
-      {JSON.stringify(budgetObj || {}, null, 4)}
-    </pre>
+      <>
+          <NumberFormat value={(budgetObj ? budgetObj.totalBudget : 0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+          <pre style={{ backgroundColor: '#595959', padding: '2rem 1rem', color: 'white'}}>
+              {JSON.stringify(budgetObj || {}, null, 4)}
+          </pre>
+      </>
   );
 
   return (
@@ -167,12 +173,12 @@ const App = () => {
             </div>
           </div>
 
-          <div className="row">
-            <div className="col table-responsive pt-3" style={{ height: 'calc(100vh - 35vh)' }}>
-              {/*{showTable && TableRow}*/}
-              {fileObj && JSONRow}
-            </div>
-          </div>
+          {/*<div className="row">*/}
+          {/*  <div className="col table-responsive pt-3" style={{ height: 'calc(100vh - 35vh)' }}>*/}
+          {/*    /!*{showTable && TableRow}*!/*/}
+          {/*    {fileObj && JSONRow}*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
         </div>
       </header>
