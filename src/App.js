@@ -25,7 +25,7 @@ const App = () => {
     reader.onload = (e) => {
 
       const bstr = e.target.result;
-      const apiUrl = 'http://localhost:5000/bist-2-dev/us-central1/uploadExcel';
+      const apiUrl = 'http://localhost:5000/bist-2-dev/us-central1/testUploadExcel';
       // const apiUrl = 'https://us-central1-bist-2-dev.cloudfunctions.net/uploadExcel';
       // const apiUrl = 'https://us-central1-multi-excel-functions.cloudfunctions.net/uploadExcel';
       axios.post(apiUrl, {
