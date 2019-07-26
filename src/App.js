@@ -13,8 +13,8 @@ const App = () => {
 
   const [file, setFile] = useState(null);
   const [fileObj, setFileObj] = useState(null);
-  const [showTable, setShowTable] = useState(null);
-  const [showJSON, setShowJSON] = useState(null);
+  // const [showTable, setShowTable] = useState(null);
+  // const [showJSON, setShowJSON] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
@@ -24,7 +24,16 @@ const App = () => {
     reader.onload = (e) => {
 
       const bstr = e.target.result;
-      axios.post('http://localhost:4000/upload/excel', { file: bstr })
+      const apiUrl = 'http://localhost:5000/bist-2-dev/us-central1/uploadExcel';
+      // const apiUrl = 'https://us-central1-bist-2-dev.cloudfunctions.net/uploadExcel';
+      // const apiUrl = 'https://us-central1-multi-excel-functions.cloudfunctions.net/uploadExcel';
+      axios.post(apiUrl, {
+        file: bstr,
+        userId: '3-b3270c52-8869-ed22-fc75-06a586070668',
+        projectId: '1-4a517123-0203-57e4-1505-6b1c35d67be3',
+        companyId: '2-74aeaee1-1689-324a-dcd8-8e8a103fa524',
+        corporateDivisionId: '1-fea5fc47-1a82-03b7-f2ee-2f607a35fd45',
+      })
         .then(function (response) {
           console.log(response);
           setFileObj(response.data || null);
@@ -52,52 +61,52 @@ const App = () => {
     setFile(f)
   };
 
-  const ActionsRow = (
-    <div className="row">
-      <div className="col">
-        <button type="button" className="btn btn-sm btn-outline-primary mr-2" onClick={() => {
-          setShowTable(true);
-          setShowJSON(false);
-        }}>
-          Show table
-        </button>
-        <button type="button" className="btn btn-sm btn-outline-success" onClick={() => {
-          setShowJSON(true);
-          setShowTable(false);
-        }}>
-          Show JSON
-        </button>
-      </div>
-    </div>
-  );
-
-  const TableRow = (
-    <table className="table">
-      <thead>
-        <tr>
-          {fileObj && fileObj.originalHeaders.map(header => <th key={header}>{header}</th>)};
-            </tr>
-      </thead>
-      <tbody>
-        {fileObj && fileObj.rows.map((row, i) => {
-          return (
-            <tr key={i}>
-              {fileObj && fileObj.mapHeaders.map(mapH => <td key={row[mapH]}>{row[mapH]}</td>)}
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
-  );
+  // const ActionsRow = (
+  //   <div className="row">
+  //     <div className="col">
+  //       <button type="button" className="btn btn-sm btn-outline-primary mr-2" onClick={() => {
+  //         setShowTable(true);
+  //         setShowJSON(false);
+  //       }}>
+  //         Show table
+  //       </button>
+  //       <button type="button" className="btn btn-sm btn-outline-success" onClick={() => {
+  //         setShowJSON(true);
+  //         setShowTable(false);
+  //       }}>
+  //         Show JSON
+  //       </button>
+  //     </div>
+  //   </div>
+  // );
+  //
+  // const TableRow = (
+  //   <table className="table">
+  //     <thead>
+  //       <tr>
+  //         {fileObj && fileObj.originalHeaders.map(header => <th key={header}>{header}</th>)};
+  //           </tr>
+  //     </thead>
+  //     <tbody>
+  //       {fileObj && fileObj.rows.map((row, i) => {
+  //         return (
+  //           <tr key={i}>
+  //             {fileObj && fileObj.mappedHeaders.map(mapH => <td key={row[mapH]}>{row[mapH]}</td>)}
+  //           </tr>
+  //         )
+  //       })}
+  //     </tbody>
+  //   </table>
+  // );
 
   const JSONRow = (
-    <pre style={{ height: 'calc(100vh - 35vh)' }}>
+    <pre style={{ height: 'calc(100vh - 35vh)', backgroundColor: '#595959', padding: '1rem', color: 'white'}}>
       {JSON.stringify(fileObj || {}, null, 4)}
     </pre>
   );
 
   return (
-    <div className="container pt-5">
+    <div className="container-fluid pt-5">
       <header className="App-header">
         <div className="jumbotron pt-0 bg-transparent position-relative">
           {loading && <ContentLoader />}
@@ -110,9 +119,9 @@ const App = () => {
           </div>
           <hr />
           <div className="row justify-content-between pt-3">
-            <div className="col-sm-12 col-md-4">
-              {fileObj && ActionsRow}
-            </div>
+            {/*<div className="col-sm-12 col-md-4">*/}
+            {/*  {fileObj && ActionsRow}*/}
+            {/*</div>*/}
             <div className="col-sm-12 col-md-4">
               <form onSubmit={handleSubmit}>
                 <div className="input-group mb-3">
@@ -133,8 +142,8 @@ const App = () => {
 
           <div className="row">
             <div className="col table-responsive pt-3" style={{ height: 'calc(100vh - 35vh)' }}>
-              {showTable && TableRow}
-              {showJSON && JSONRow}
+              {/*{showTable && TableRow}*/}
+              {fileObj && JSONRow}
             </div>
           </div>
 
