@@ -67,11 +67,22 @@ const App = () => {
     setLoading(true);
     const testBudgetUrl = 'http://localhost:5000/bist-2-dev/us-central1/gettingBudgetEstimate';
     axios.get(testBudgetUrl)
-        .then(result => {
-          setBudgetObj(result.data || {});
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
+      .then(result => {
+        setBudgetObj(result.data || {});
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
+
+  const getIdentical = async () => {
+    setLoading(true);
+    const checkIdenticalUrl = 'http://localhost:5000/bist-2-dev/us-central1/checkIdenticalPackages';
+    axios.get(checkIdenticalUrl)
+      .then(result => {
+        setBudgetObj(result.data || {});
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
 
   // const ActionsRow = (
@@ -113,18 +124,18 @@ const App = () => {
   // );
 
   const JSONRow = (
-    <pre style={{ backgroundColor: '#595959', padding: '2rem 1rem', color: 'white'}}>
+    <pre style={{ backgroundColor: '#595959', padding: '2rem 1rem', color: 'white' }}>
       {JSON.stringify(fileObj || {}, null, 4)}
     </pre>
   );
 
   const JSONBudget = (
-      <>
-          <NumberFormat value={(budgetObj ? budgetObj.totalBudget : 0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-          <pre style={{ backgroundColor: '#595959', padding: '2rem 1rem', color: 'white'}}>
-              {JSON.stringify(budgetObj || {}, null, 4)}
-          </pre>
-      </>
+    <>
+      <NumberFormat value={(budgetObj ? budgetObj.totalBudget : 0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+      <pre style={{ backgroundColor: '#595959', padding: '2rem 1rem', color: 'white' }}>
+        {JSON.stringify(budgetObj || {}, null, 4)}
+      </pre>
+    </>
   );
 
   return (
@@ -148,6 +159,10 @@ const App = () => {
               <button className="btn btn-primary" onClick={getBudget}>
                 Get Budget
               </button>
+
+              <button className="btn btn-primary" onClick={getIdentical}>
+                Get Identical
+                </button>
             </div>
             <div className="col-sm-12 col-md-4">
               <form onSubmit={handleSubmit}>
